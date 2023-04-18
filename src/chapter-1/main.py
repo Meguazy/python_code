@@ -25,12 +25,12 @@ def mergeDicts(dicts: list) -> dict:
 
 def main():
     #Scraping words from a website and counting them
-    """string_html = WebScraper.webScraperFromString(str(input("Inserisci l'url che vuoi ricercare: ")))
+    string_html = WebScraper.webScraperFromString(str(input("Inserisci l'url che vuoi ricercare: ")))
     countWordsFromPattern(r"\w{3,50}", string_html)
-    countWordsFromPattern(r"\w+", string_html)"""
+    countWordsFromPattern(r"\w+", string_html)
 
     #Indexing files in a folder using dicts
-    """path = input("Inserisci il path in cui vuoi cercare i file: ")
+    path = input("Inserisci il path in cui vuoi cercare i file: ")
     file_list = os.listdir(path)
     dicts: list = []
 
@@ -47,7 +47,7 @@ def main():
 
     with open("pickle_files/myData.pickle", "rb") as iFile:
         data = pickle.load(iFile)
-        print(data)"""
+        print(data)
 
 if __name__ == "__main__":
     main()
