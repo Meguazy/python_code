@@ -13,7 +13,7 @@ def countWordsFromPattern(pattern: str, html: str):
     print(common)
 
 def getWordsListFromPattern(pattern: str, to_be_searched: str):
-    return re.findall(pattern, to_be_searched, re.I)
+    return re.findall(pattern, to_be_searched)
 
 def mergeDicts(dicts: list) -> dict:
     super_dict = collections.defaultdict(list)
@@ -48,6 +48,13 @@ def main():
     with open("pickle_files/myData.pickle", "rb") as iFile:
         data = pickle.load(iFile)
         print(data)
+    
+    with open("phone_numbers.txt", "r") as f:
+        text = f.read()
+        compiled_pattern = re.compile(r"\+\d{1,2}\s\(?\d{3}\)?\s\d{3}-?\d{4}") #\d{3}[ -]?")
+        phone_numbers = getWordsListFromPattern(compiled_pattern, text)
+        print(phone_numbers)
+        print(text)
 
 if __name__ == "__main__":
     main()
