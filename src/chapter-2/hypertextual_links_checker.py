@@ -3,7 +3,6 @@ from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
-
 class DataScraper():
 
     def html_data_scraper(self, url: str) -> BeautifulSoup:
