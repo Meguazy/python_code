@@ -34,6 +34,4 @@ def execute():
              if link.has_attr("href")
                 if "http" in str(link["href"]).lower()]
     
-    [print(f'{x[1]}\n') for x in links]
-
     [scraper.html_test_connection(str(x[1])) for x in links]
