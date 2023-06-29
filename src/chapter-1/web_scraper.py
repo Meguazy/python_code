@@ -11,7 +11,3 @@ class WebScraper():
             print("Could not open %s" % doc, file=sys.stderr)
 
         return html
-
-
-
-
