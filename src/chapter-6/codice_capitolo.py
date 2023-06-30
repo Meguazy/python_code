@@ -122,3 +122,166 @@ print(alco_re.loc["Alaska", 1979])
 
 #STACK E PIVOT
 print("\n---STACK E PIVOT---")
+tall_alco = alco_re.stack()
+print(tall_alco)
+
+tall_alco.index.names = ['State', 'Year', 'Drink']
+print(tall_alco.head(10))
+
+print("\nUnstacking:")
+wide_alco = alco_re.unstack()
+print(wide_alco.head(10))
+print("\n\n\n\n")
+print(wide_alco.Beer)
+
+print("\nPivoting:")
+print(alco_re.pivot_table(index='Year', columns='State', values=['Wine']))
+
+print("\n---UNIT 33:HOW TO MANAGE MISSING DATA---")
+print("\nDeleting missing data:")
+print(alco_nan.dropna(how="all"))
+print(alco_nan.dropna(how="all",axis=1))
+print(alco_nan.dropna())
+
+print("\nRecostructing missing data")
+sp = alco_nan["Wine"]
+clean = sp.notnull()
+#In this case i'm replacing the non clean value with the mean of the clean ones
+sp[-clean] = sp[clean].mean()
+print(alco_nan.head())
+
+#In this other case i'm replacing thhe non clean values with zeros
+print(alco_nan.fillna(0))
+
+#In this last case i'm replacing the non clean values using the method='ffill' parameter
+print(alco_nan.fillna(method="ffill"))
+
+print("\nReplacing missing data")
+print(alco_nan.replace(np.nan,"Hello"))
+
+
+#Merging data - Unit 34
+alco2009.drop("Total", axis=1, inplace=True)
+print("\nMerge function:")
+population = pd.DataFrame({"Population" : [631543, 599657, 544270, 698712]},
+                          index=("Alabama", "Alaska", "Altri stati", "Ohio"))
+population.index.name = "Stati"
+print(population.head())
+print("\nMerged population and alco")
+merged = pd.merge(alco2009.reset_index(),population.reset_index()).set_index("Stati")
+print(merged.head())
+
+#CONCAT 
+print("\nConcatenating population and alco2009")
+print(pd.concat([alco2009, population], axis=1).head())
+
+#SORTING
+print("\nSorting the frame by index:")
+pop_by_state = population.sort_index(ascending=False)
+print(pop_by_state.head())
+
+print("\nSorting the frame by values:")
+print(population.sort_values("Population",ascending=False).head())
+
+#INDEX CLASSIFICATION
+print("\nUsing the 'rank' function to rank the frame")
+print(pop_by_state.rank().head())
+
+#STATISTICA DESCRITTIVA
+print("\n Max function on the columns:")
+print(alco2009.max())
+print("\n Min function on the rows:")
+print(alco2009.min(axis=1))
+print("\n Sum function on the columns:")
+print(alco2009.sum())
+print("\n Cumulative sum function on the columns for the Alabama state:")
+print(alco_re.loc["Alabama"])
+print(alco_re.loc["Alabama"].cumsum().head())
+print("\n Progressive difference function on the columns for the Alabama state:")
+print(alco_re.loc["Alabama"].diff().head())
+
+#UNICITA', CONTEGGIO E APPARTENENZA
+dna = "AGTCCGCGAATACAGGCTCGGT"
+dna_as_series = pd.Series(list(dna), name="genes")
+print(dna_as_series.head())
+
+print("\n unique function on dna Series:")
+print(dna_as_series.unique())
+print("\n values_counts function on dna Series:")
+print(dna_as_series.value_counts().sort_index())
+
+print("\n isin function on dna seriesm, using the 'all' parameter:")
+valid_nucs = list("ACGT")
+print(dna_as_series.isin(valid_nucs).all())
+
+#---TRASFORMAZIONE DEI DATI - UNIT 36---
+print("\n Using the sum function on the 'Total' column:")
+alco2009["Total"] = alco2009[list(alco2009.columns)].sum(axis=1)
+print(alco2009.head())
+
+print("\n Using log10 numpy function on the 'Total' column:")
+print(np.log10(alco2009.Total).head())
+
+#Aggregations
+print("\nAggregation by Year using sum function:")
+alco_noidx = alco_re.reset_index()
+sum_alco = alco_noidx.groupby("Year").sum().drop("State", axis=1)
+print(sum_alco.head())
+print("\n Aggregation using for loop:")
+for year, year_frame in alco_noidx.groupby("Year"):
+    print(year)
+    print(year_frame)
+
+#Discretizzazione
+print("\nDiscretizzzione senza labels")
+cats = pd.cut(alco2009["Wine"], 3)
+print(cats.head())
+
+print("\nDiscretizzzione con labels")
+cats = pd.cut(alco2009["Wine"], 3, labels=("Low", "Moderate", "Heavy"))
+print(cats.head)
+
+print("\n Discretizzazione con i quantili:")
+quants = pd.qcut(alco2009["Wine"], 3, labels=("Low", "Moderate", "Heavy"))
+print(quants.head())
+
+#Mappaggio
+print("\n Using map function to get the suffix of the state and turn it to upper case:")
+with_state = alco2009.reset_index()
+suffix = with_state["Stati"].map(lambda x: x[:3].upper())
+print(suffix.head()) 
+
+#Tabulazione incrociata
+print("\n Using crosstab to check if a wine state (a state where the wine consumption is higher than the mean) is also a beer state:")
+wine_state = alco2009["Wine"] > alco2009["Wine"].mean()
+beer_state = alco2009["Beer"] > alco2009["Beer"].mean()
+print(pd.crosstab(wine_state,beer_state))
+
+#--- I/O SU FILE IN PANDAS ---
+print("\n Reading a CSV file through Pandas:")
+regions = pd.read_csv("data.csv",
+                      header=None,
+                      names=("region", "division", "state"))
+regions = regions.fillna("prova")
+print(regions.head(regions.shape[0]))
+
+print("\n Cleaning the DataFrame:")
+state2reg_series = regions.ffill().set_index("state")["region"]
+print(state2reg_series.head())
+#Converting state2reg_series to a dict object
+state2reg = state2reg_series.to_dict()
+#Writing on a csv
+regions.to_csv("prova.csv")
+#Chunking
+print("\n Using chunking:")
+chunker = pd.read_csv("prova.csv", 
+                      chunksize=5, 
+                      header=None,
+                      names=("region", "division", "state"))
+accum = pd.Series()
+for piece in chunker:
+    counts = piece["region"].value_counts()
+    accum = accum.add(counts, fill_value=0)
+    print("\n Accum:")
+    print(accum)
+
