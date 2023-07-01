@@ -13,9 +13,17 @@ GDP_per_capita_html = Miner.table_miner("https://en.wikipedia.org/wiki/List_of_c
 alco_per_capita = pd.concat(pd.read_html(str(alco_per_capita_html), index_col='Country'))
 print(alco_per_capita)
 
-#Creating GDP per capita dataframe
+#Creating GDP per capita dataframeEcco
 GDP_per_capita = pd.concat(pd.read_html(str(GDP_per_capita_html), index_col=0))
 #Cleaning the data inside the index
 new_index = list(map(lambda s: s.replace("\u202f*",""), GDP_per_capita.index.values))
 GDP_per_capita.index = new_index
 print(GDP_per_capita)
+
+alco_over_mean_value = alco_per_capita["Total"] > alco_per_capita["Total"].mean()
+print(alco_over_mean_value)
+GDP_over_mean_value = GDP_per_capita['CIA[8][9][10]']['Estimate'] > GDP_per_capita['CIA[8][9][10]']['Estimate'].mean()
+print(GDP_per_capita['CIA[8][9][10]']['Estimate'].mean())
+
+cross_table_over = pd.crosstab(GDP_over_mean_value, alco_over_mean_value)
+print(cross_table_over)
