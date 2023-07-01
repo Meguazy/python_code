@@ -271,10 +271,10 @@ print(state2reg_series.head())
 #Converting state2reg_series to a dict object
 state2reg = state2reg_series.to_dict()
 #Writing on a csv
-regions.to_csv("prova.csv")
+regions.to_csv("python_code_csvs/prova.csv")
 #Chunking
 print("\n Using chunking:")
-chunker = pd.read_csv("prova.csv", 
+chunker = pd.read_csv("python_code_csvs/prova.csv", 
                       chunksize=5, 
                       header=None,
                       names=("region", "division", "state"))
