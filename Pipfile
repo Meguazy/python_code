@@ -12,6 +12,7 @@ requests = "*"
 lxml = "*"
 networkx = "*"
 community = "*"
+python-louvain = "*"
 
 [dev-packages]
 
