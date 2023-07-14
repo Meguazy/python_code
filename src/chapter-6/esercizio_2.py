@@ -5,7 +5,6 @@ from miner import Miner
 
 #alco_per_capita.to_csv("ex_2_csvs/alco_per_capita.csv", index="Country")
 #GDP_per_capita.to_csv("ex_2_csvs/GDP_per_capita.csv")
-
 alco_per_capita_html = Miner.table_miner("https://en.wikipedia.org/wiki/List_of_countries_by_alcohol_consumption_per_capita", 2)
 GDP_per_capita_html = Miner.table_miner("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita", 1)
 
@@ -25,7 +24,6 @@ print(alco_over_mean_value)
 GDP_over_mean_value = GDP_per_capita['CIA[8][9][10]']['Estimate'] > GDP_per_capita['CIA[8][9][10]']['Estimate'].mean()
 
 cross_table_over = pd.crosstab(GDP_over_mean_value, alco_over_mean_value).unstack()
-
 
 data = pd.DataFrame({"under_alco_num": cross_table_over.groupby("Total").sum().iloc[0],
                      "over_alco_num": cross_table_over.groupby("Total").sum().iloc[1],
